@@ -13,9 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-defined('MOODLE_INTERNAL') || die();
 
 namespace local_read_only;
+defined('MOODLE_INTERNAL') || die();
 
 use core\hook\output\before_standard_top_of_body_html_generation;
 
