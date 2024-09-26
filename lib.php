@@ -15,21 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Class local_read_only
- */
-function local_read_only_before_standard_top_of_body_html() {
-    global $DB;
-    if (get_config('local_read_only', 'enable_readonly') === '1') {
-        $msg = get_config('local_read_only', 'alert_message');
-        if (!method_exists($DB, 'get_readonly_driver')) {
-            $msg = get_string('configfileerror','local_read_only');
-            \core\notification::add($msg, \core\notification::WARNING);
-        } else if (is_siteadmin()) {
+namespace local_read_only;
+
+use core\hook\output\before_standard_top_of_body_html_generation;
+
+class hooks {
+    /**
+     * This function is triggered before the standard top of body HTML is generated.
+     *
+     * @param before_standard_top_of_body_html_generation $hook The hook object that allows modification of HTML.
+     */
+    public static function before_standard_top_of_body_html_generation(before_standard_top_of_body_html_generation $hook) {
+        global $DB;
+        
+        if (get_config('local_read_only', 'enable_readonly') === '1') {
+            $msg = get_config('local_read_only', 'alert_message');
+            if (!method_exists($DB, 'get_readonly_driver')) {
+                $msg = get_string('configfileerror', 'local_read_only');
+                \core\notification::add($msg, \core\notification::WARNING);
+            } else if (is_siteadmin()) {
                 $msg .= get_string('youareadmin', 'local_read_only');
                 \core\notification::add($msg, \core\notification::WARNING);
             } else {
                 \core\notification::add($msg, \core\notification::WARNING);
             }
         }
+    }
 }
